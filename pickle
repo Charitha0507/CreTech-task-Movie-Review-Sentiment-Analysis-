@@ -1,0 +1,23 @@
+import pandas as pd
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.linear_model import LogisticRegression
+
+# Load dataset csv (assumes 'review' and 'sentiment' columns)
+data = pd.read_csv("IMDB Dataset.csv")
+
+# Binarize sentiment for logistic regression
+data['label'] = data['sentiment'].map({'positive':1, 'negative':0})
+
+# Vectorize text with CountVectorizer (binary features)
+vectorizer = CountVectorizer(max_features=20, binary=True)
+X = vectorizer.fit_transform(data['review'])
+y = data['label']
+
+# Train logistic regression
+model = LogisticRegression()
+model.fit(X, y)
+
+# Print vocabulary and coefficients for embedding
+print("Vocabulary:", vectorizer.vocabulary_)
+print("Coefficients:", model.coef_[0])
+print("Intercept:", model.intercept_[0])
